@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Portfolio Blur Scroll</title>
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+  <style>
+    body { margin:0; font-family:Arial, sans-serif; background:#111; color:#eee; }
+    section {
+      min-height:100vh; 
+      padding:100px 20px;
+      transition: filter 0.8s ease, opacity 0.8s ease;
+    }
+    h1 { font-size:2.5rem; margin-bottom:20px; }
+    p { font-size:1.2rem; }
+
+    /* Skill bars */
+    .skill-bar { background:#333; border-radius:8px; overflow:hidden; margin:15px 0; }
+    .skill-bar-inner {
+      height:20px; width:0;
+      background:linear-gradient(90deg, #1e90ff, #0ff);
+      transition:width 1.5s ease;
+    }
+
+    /* Blur efect */
+    .blurred {
+      filter: blur(8px) brightness(0.7);
+      opacity:0.6;
+    }
+  </style>
+</head>
+<body>
+
+<section id="home" data-aos="fade-up">
+  <h1>🚀 Bun venit!</h1>
+  <p data-aos="zoom-in" data-aos-delay="300">Scroll mai jos și vezi blur + animații.</p>
+</section>
+
+<section id="about" data-aos="fade-right">
+  <h1>⚡ Skill Bars</h1>
+  <div class="skill-bar"><div class="skill-bar-inner" data-width="90%"></div></div>
+  <div class="skill-bar"><div class="skill-bar-inner" data-width="70%"></div></div>
+  <div class="skill-bar"><div class="skill-bar-inner" data-width="50%"></div></div>
+</section>
+
+<section id="projects" data-aos="flip-left">
+  <h1>📂 Proiecte</h1>
+  <div data-aos="zoom-in" data-aos-delay="200">Card proiect 1</div>
+  <div data-aos="zoom-in" data-aos-delay="400">Card proiect 2</div>
+</section>
+
+<section id="contact" data-aos="fade-up">
+  <h1>📩 Contact</h1>
+  <p>Trimite-mi un mesaj aici.</p>
+</section>
+
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+  AOS.init({ duration: 1000, once: true });
+
+  // anima skill bars
+  const skills = document.querySelectorAll(".skill-bar-inner");
+  function animateSkills() {
+    skills.forEach(bar => {
+      const rect = bar.getBoundingClientRect();
+      if (rect.top < window.innerHeight && bar.style.width === "0px") {
+        bar.style.width = bar.getAttribute("data-width");
+      }
+    });
+  }
+  window.addEventListener("scroll", animateSkills);
+  window.addEventListener("load", animateSkills);
+
+  // blur pentru secțiuni deja parcurse
+  const sections = document.querySelectorAll("section");
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting && entry.boundingClientRect.top < 0) {
+        entry.target.classList.add("blurred");
+      } else {
+        entry.target.classList.remove("blurred");
+      }
+    });
+  }, { threshold: 0.2 });
+
+  sections.forEach(sec => observer.observe(sec));
+</script>
+</body>
+</html>
